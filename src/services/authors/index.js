@@ -2,7 +2,7 @@ import express from "express"; // 3rd party package
 import fs from "fs"; // core package
 import {fileURLToPath} from "url"; // core package
 import {dirname, join} from "path"; // core package
-import uniqid from "uniqid"; // 3rd party package
+// import uniqid from "uniqid"; // 3rd party package
 
 const authorsRouter = express.Router();
 
@@ -26,30 +26,20 @@ authorsRouter.get("/:id", (req, res) => {
   // id in the json data is string where as in the params of the request is
   // a number
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
-  // console.log(authors);
   const author = authors.find((a) => a._id === req.params.id);
-  // sending the response
   res.send(author);
-  // console.log(authors);
 });
 
 // ---------------------------
 
 // 3 .CREATE individual post using the:
-// name
-// surname
-// ID (Unique and server generated)
-// email
-// date of birth
-// avatar (e.g. https://ui-avatars.com/api/?name=John+Doe)
+
 authorsRouter.post("/", (req, res) => {
   // to find the number of authors present
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
   let auth_cnt = authors.length + 1;
   console.log(auth_cnt + 1, "Is the number alloted to ", req.body);
 
-  // if the request body has the email above then return false and
-  // dont add the post
   let present = 0;
   let id = 0; // to make it global
   authors.forEach((author) => {
@@ -64,11 +54,8 @@ authorsRouter.post("/", (req, res) => {
     id = newAuthor._id;
     authors.push(newAuthor);
 
-    // save the file back
     fs.writeFileSync(authorsJSONPath, JSON.stringify(authors));
   }
-
-  // sending the proper response
   res
     .status(201)
     .send(
@@ -80,13 +67,10 @@ authorsRouter.post("/", (req, res) => {
 //  4. delete
 authorsRouter.delete("/:id", (req, res) => {
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
-  // remaining authors;
   const remainingAuthors = authors.filter(
-    (author) => author._id !== parseInt(req.params.id)
+    (author) => author._id !== req.params.id
   );
   fs.writeFileSync(authorsJSONPath, JSON.stringify(remainingAuthors));
-
-  // send the result of deleted
   res.status(204).send();
 });
 // ---------------------------
@@ -94,9 +78,13 @@ authorsRouter.delete("/:id", (req, res) => {
 authorsRouter.put("/:id", (req, res) => {
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
   const remainingAuthors = authors.filter(
-    (author) => author._id !== parseInt(req.params.id)
+    (author) => author._id !== req.params.id
   );
-  const modifiedAuth = {...req.body, _id: req.params.id};
+  const modifiedAuth = {
+    ...req.body,
+    _id: req.params.id,
+    avatar: `https://ui-avXXXXXXXatars.com/api/${req.body.name}+${req.body.surname}`,
+  };
   remainingAuthors.push(modifiedAuth);
   //changing the format and putting the file
   fs.writeFileSync(authorsJSONPath, JSON.stringify(remainingAuthors));
