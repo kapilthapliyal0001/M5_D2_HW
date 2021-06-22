@@ -39,6 +39,10 @@ authorsRouter.post("/", (req, res) => {
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
   let auth_cnt = authors.length + 1;
   console.log(auth_cnt + 1, "Is the number alloted to ", req.body);
+  // console.log(
+  //   req.body.email === "kceknn---nce.com",
+  //   "is the email even if it is not mentioned"
+  // );
 
   let present = 0;
   let id = 0; // to make it global
@@ -46,10 +50,13 @@ authorsRouter.post("/", (req, res) => {
     if (author.email === req.body.email) {
       present = 1;
       console.log("The email is present already");
+      return false;
+    } else {
+      console.log("not preseent");
     }
   });
   // old section;
-  if (present == 0) {
+  if (present === 0) {
     const newAuthor = {...req.body, _id: auth_cnt};
     id = newAuthor._id;
     authors.push(newAuthor);
@@ -59,7 +66,7 @@ authorsRouter.post("/", (req, res) => {
   res
     .status(201)
     .send(
-      present == 0 ? {_id: id} : "You are NOT allowed to enter the same email"
+      present === 0 ? {_id: id} : "You are NOT allowed to enter the same email"
     );
 });
 
