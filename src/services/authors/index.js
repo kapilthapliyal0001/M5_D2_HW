@@ -36,14 +36,12 @@ authorsRouter.get("/:id", (req, res) => {
 // ---------------------------
 
 // 3 .CREATE individual post using the:
-
 // name
 // surname
 // ID (Unique and server generated)
 // email
 // date of birth
 // avatar (e.g. https://ui-avatars.com/api/?name=John+Doe)
-
 authorsRouter.post("/", (req, res) => {
   // to find the number of authors present
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
