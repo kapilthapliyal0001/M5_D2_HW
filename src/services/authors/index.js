@@ -27,7 +27,7 @@ authorsRouter.get("/:id", (req, res) => {
   // a number
   const authors = JSON.parse(fs.readFileSync(authorsJSONPath));
   // console.log(authors);
-  const author = authors.find((a) => a._id === parseInt(req.params.id));
+  const author = authors.find((a) => a._id === req.params.id);
   // sending the response
   res.send(author);
   // console.log(authors);
